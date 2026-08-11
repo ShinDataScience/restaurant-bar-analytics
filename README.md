@@ -38,6 +38,7 @@ Weather, local events, and holiday calendars are features, not excuses after the
     sql/            canonical views over POS data
     src/
       data/         POS ingestion and normalization across Toast, Square, Clover, Lightspeed, Brink, PixelPoint, Tabit
+                    plus report-only ingestion, capability gating, and optional extractors
       features/     RFM and guest feature construction
       models/       customer lifetime value
       loyalty/      program simulator and reward economics
@@ -48,6 +49,29 @@ Weather, local events, and holiday calendars are features, not excuses after the
     dashboards/     Streamlit app aimed at a GM with ten minutes before service
     tests/          behavior that is easy to get wrong and easy to regress
     docs/           roadmap and metric definitions
+
+## What data this needs
+
+The ideal input is transaction level: one row per check with a timestamp and a guest id where one
+exists, one row per item sold, and plate or pour costs from a recipe sheet, since no POS knows what
+an item costs to make. That unlocks everything described above.
+
+Most independent venues cannot produce it. POS API access usually sits behind a partner tier, or
+nobody on site has the back office login. What they can almost always send is canned reports: a
+daily sales summary, a product mix report, hourly sales, labor, and comps. Those load through
+`src/data/aggregate_ingest.py` into coarser tables, and `src/data/capabilities.py` decides what may
+be computed from them. Forecasting, labor planning, menu engineering, mix shift and cost control all
+survive that downgrade. Guest analytics do not: RFM, CLV, loyalty economics and campaign lift are
+withheld with a reason rather than estimated, because a segment built without guest ids is not a
+rougher segment, it is a fictional one. See docs/METRICS.md for the full breakdown by tier.
+
+Worth asking before settling for reports: loyalty platforms and reservation systems often export
+guest and visit history as CSV even when the POS API is shut, which recovers a real part of the
+guest picture.
+
+CSV and Excel are the supported formats. PDF report parsing is an optional addon in
+`src/data/extractors/`, kept behind its own dependencies, its own confidence scoring, and a review
+queue, so a parsing guess can never quietly become a reported number.
 
 ## Getting started
 
