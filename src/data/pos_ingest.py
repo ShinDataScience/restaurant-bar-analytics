@@ -20,6 +20,10 @@ Two rules that save a lot of pain later:
 1. Business date is not calendar date. A bar closing at 2am belongs to the previous business date,
    and getting this wrong shifts a meaningful chunk of late-night revenue to the wrong day.
 2. Raw files are never edited in place. Corrections are new rows with a load timestamp.
+
+Venues that cannot export check level data at all are handled by aggregate_ingest.py, which reads
+canned reports into coarser tables. Summary rows are never routed through this module, because a
+fabricated check id is worse than an honest aggregate.
 """
 
 from __future__ import annotations
