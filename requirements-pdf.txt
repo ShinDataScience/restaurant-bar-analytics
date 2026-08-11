@@ -1,0 +1,16 @@
+# Optional addon: PDF report extraction
+#
+# Only needed for src/data/extractors/pdf_reports.py. The core ingestion path accepts CSV and
+# Excel and works fine without any of this. Install alongside requirements.txt:
+#
+#     pip install -r requirements.txt -r requirements-pdf.txt
+
+# Text based PDFs
+pdfplumber>=0.11          # table and word extraction with position data
+pypdf>=4.2                # page inspection, splitting, and text layer detection
+
+# Scanned or photographed reports only. Both need the tesseract binary installed separately,
+# which is why the OCR path is a separate call and never runs by default.
+pytesseract>=0.3.10
+Pillow>=10.3
+pdf2image>=1.17           # also needs poppler on the system
