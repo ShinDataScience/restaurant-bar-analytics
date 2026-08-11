@@ -37,7 +37,7 @@ Weather, local events, and holiday calendars are features, not excuses after the
     data/           gitignored working data, plus schema and handling rules
     sql/            canonical views over POS data
     src/
-      data/         POS ingestion and normalization across Toast, Square, Clover, Lightspeed
+      data/         POS ingestion and normalization across Toast, Square, Clover, Lightspeed, Brink, PixelPoint, Tabit
       features/     RFM and guest feature construction
       models/       customer lifetime value
       loyalty/      program simulator and reward economics
