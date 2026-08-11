@@ -1,8 +1,9 @@
 """POS ingestion and normalization.
 
-Every POS exports a slightly different shape of the same thing. Toast, Square, Clover and
-Lightspeed all disagree about what a check is, where the tip lives, whether voids appear as
-negative lines or as a status flag, and how modifiers are attached to items.
+Every POS exports a slightly different shape of the same thing. Toast, Square, Clover,
+Lightspeed, Brink, PixelPoint and Tabit all disagree about what a check is, where the tip
+lives, whether voids appear as negative lines or as a status flag, and how modifiers are
+attached to items.
 
 The job of this module is to turn all of them into one canonical schema so nothing downstream
 has to care which POS the venue uses.
@@ -27,7 +28,7 @@ from pathlib import Path
 
 import pandas as pd
 
-SUPPORTED_SOURCES = ("toast", "square", "clover", "lightspeed", "generic_csv")
+SUPPORTED_SOURCES = ("toast", "square", "clover", "lightspeed", "brink", "pixelpoint", "tabit", "generic_csv")
 
 
 def load_raw(source: str, path: Path) -> pd.DataFrame:
