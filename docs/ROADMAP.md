@@ -14,6 +14,27 @@ operator gets value early instead of waiting for a whole platform to be finished
 - Standardize into a shared transaction model: check header, line items, guest, employee, venue,
   daypart, tender, discount, and channel.
 
+## Phase 1b - Ingestion for venues without API access
+
+Most independent venues cannot hand over POS API credentials, either because the integration is a
+paid partner tier or because nobody on site has the login. They can almost always export canned
+reports. This phase makes that a supported path rather than a dead end.
+
+- Aggregate ingestion of daily sales summaries, product mix, hourly sales, labor and comp reports
+  into sales_daily, item_sales_period and labor_daily, in src/data/aggregate_ingest.py.
+- Reconciliation between reports on every load, since product mix and the daily summary are pulled
+  with different date boundaries more often than anyone expects.
+- Capability gating in src/data/capabilities.py: analyses declare the data grain they need, the
+  loader reports the grain present, and anything unsupported is withheld with a reason an operator
+  can act on rather than estimated.
+- Degraded campaign measurement by interrupted time series where no holdout is possible, always
+  labelled directional and never as lift.
+- Guest data recovery from outside the POS, since loyalty platforms and reservation systems often
+  export visit history as CSV when the POS API is closed.
+- Optional extractors behind a boundary in src/data/extractors/, starting with PDF report parsing:
+  confidence scored, arithmetic checked against the printed totals, with a review queue and no
+  automatic loading of anything doubtful.
+
 ## Phase 2 - Core guest analytics
 
 - RFM scoring and segmentation (regulars, lapsing regulars, weekend-only, high-spend occasional).
