@@ -7,8 +7,9 @@ operator gets value early instead of waiting for a whole platform to be finished
 
 - Define the questions that actually matter to an operator: who are my best guests, which promotions
   paid for themselves, which menu items carry the margin, and when do I need more staff on the floor.
-- Build connectors for common sources: POS exports (Toast, Square, Clover, Lightspeed), reservation
-  systems (OpenTable, Resy, SevenRooms), delivery marketplaces, and loyalty/CRM exports.
+- Build connectors for common sources: POS exports (Toast, Square, Clover, Lightspeed, Brink,
+  PixelPoint, Tabit), reservation systems (OpenTable, Resy, SevenRooms), delivery marketplaces,
+  and loyalty/CRM exports.
 - Land raw extracts in data/raw, keep them immutable, and version the schema contracts.
 - Standardize into a shared transaction model: check header, line items, guest, employee, venue,
   daypart, tender, discount, and channel.
