@@ -53,3 +53,39 @@ the contract for this project.
 | Seat turns | Covers divided by seats, per daypart | Meaningless without daypart split |
 | Forecast MAPE | Mean absolute percent error on covers | Tracked by daypart, since dinner and lunch behave differently |
 | Labor percent | Labor cost divided by net sales | Forecast-driven scheduling is judged on this and on service quality together |
+
+## Metric availability by data tier
+
+The definitions above do not change with the data source. What changes is whether a metric can be
+computed at all. A venue sending emailed daily reports is not getting a slightly worse version of
+guest analytics, it is getting none, and saying so plainly is the difference between a tool an
+operator trusts and one they quietly stop opening. `src/data/capabilities.py` enforces this.
+
+| Metric | Transaction with guest ids | Transaction, anonymous | Aggregate reports only |
+| --- | --- | --- | --- |
+| Net sales | yes | yes | yes |
+| Average check | yes | yes | yes, if the report gives check counts |
+| Per person average | yes | yes | only if the report gives covers |
+| Covers | yes | yes | only if the report gives covers |
+| Contribution margin | yes | yes | yes, with a costing sheet |
+| Comp rate | yes | yes | yes, from the discount and comp report |
+| Labor percent | yes | yes | yes, with a labor report |
+| Forecast MAPE | yes | yes | yes |
+| Seat turns | yes | yes | only at day grain without an hourly report |
+| Identified share | yes | zero by definition | not applicable |
+| Recency, Frequency, CLV | yes | no | no |
+| Repeat rate | yes | no | no |
+| Enrollment, breakage, liability | yes | no | no |
+| Incremental lift and ROI | yes | no | no |
+| Cannibalization | yes | no | no |
+
+Two notes that matter more than the table.
+
+Covers are the field most often missing from a summary report, and the temptation is to divide net
+sales by an assumed average check to recover them. That produces a per person average which is a
+restatement of the assumption, so covers stay null instead and the metric is withheld.
+
+Campaign measurement has no aggregate equivalent. Incremental lift is defined against a holdout, and
+a holdout requires knowing who was sent what. Where that does not exist, the honest substitute is an
+interrupted time series against the demand forecast, reported as directional with its interval, and
+it is never labelled lift.
